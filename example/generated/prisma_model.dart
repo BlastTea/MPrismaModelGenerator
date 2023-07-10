@@ -2,6 +2,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart' as _i1;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import './prisma_client.dart';
 
 part 'prisma_model.freezed.dart';
 part 'prisma_model.g.dart';

@@ -1,10 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// generator client {
-//   provider = "dart run orm"
-//   output   = "../example/generated"
-// }
+generator client {
+  provider = "dart run orm"
+  output   = "../example/generated"
+}
 
 generator model {
   provider = "dart run m_prisma_model_generator"
