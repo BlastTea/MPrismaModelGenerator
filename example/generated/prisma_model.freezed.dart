@@ -28,6 +28,9 @@ mixin _$UserModel {
   set password(String value) => throw _privateConstructorUsedError;
   UserTypeModel? get userType => throw _privateConstructorUsedError;
   set userType(UserTypeModel? value) => throw _privateConstructorUsedError;
+  Iterable<BusinessModel>? get businesses => throw _privateConstructorUsedError;
+  set businesses(Iterable<BusinessModel>? value) =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +44,11 @@ abstract class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call(
-      {int id, String username, String password, UserTypeModel? userType});
+      {int id,
+      String username,
+      String password,
+      UserTypeModel? userType,
+      Iterable<BusinessModel>? businesses});
 }
 
 /// @nodoc
@@ -61,6 +68,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? username = null,
     Object? password = null,
     Object? userType = freezed,
+    Object? businesses = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -79,6 +87,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.userType
           : userType // ignore: cast_nullable_to_non_nullable
               as UserTypeModel?,
+      businesses: freezed == businesses
+          ? _value.businesses
+          : businesses // ignore: cast_nullable_to_non_nullable
+              as Iterable<BusinessModel>?,
     ) as $Val);
   }
 }
@@ -91,7 +103,11 @@ abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {int id, String username, String password, UserTypeModel? userType});
+      {int id,
+      String username,
+      String password,
+      UserTypeModel? userType,
+      Iterable<BusinessModel>? businesses});
 }
 
 /// @nodoc
@@ -109,6 +125,7 @@ class __$$_UserModelCopyWithImpl<$Res>
     Object? username = null,
     Object? password = null,
     Object? userType = freezed,
+    Object? businesses = freezed,
   }) {
     return _then(_$_UserModel(
       id: null == id
@@ -127,6 +144,10 @@ class __$$_UserModelCopyWithImpl<$Res>
           ? _value.userType
           : userType // ignore: cast_nullable_to_non_nullable
               as UserTypeModel?,
+      businesses: freezed == businesses
+          ? _value.businesses
+          : businesses // ignore: cast_nullable_to_non_nullable
+              as Iterable<BusinessModel>?,
     ));
   }
 }
@@ -138,7 +159,8 @@ class _$_UserModel implements _UserModel {
       {required this.id,
       required this.username,
       required this.password,
-      this.userType});
+      this.userType,
+      this.businesses});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -151,10 +173,12 @@ class _$_UserModel implements _UserModel {
   String password;
   @override
   UserTypeModel? userType;
+  @override
+  Iterable<BusinessModel>? businesses;
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, password: $password, userType: $userType)';
+    return 'UserModel(id: $id, username: $username, password: $password, userType: $userType, businesses: $businesses)';
   }
 
   @JsonKey(ignore: true)
@@ -176,7 +200,8 @@ abstract class _UserModel implements UserModel {
       {required int id,
       required String username,
       required String password,
-      UserTypeModel? userType}) = _$_UserModel;
+      UserTypeModel? userType,
+      Iterable<BusinessModel>? businesses}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -193,6 +218,9 @@ abstract class _UserModel implements UserModel {
   @override
   UserTypeModel? get userType;
   set userType(UserTypeModel? value);
+  @override
+  Iterable<BusinessModel>? get businesses;
+  set businesses(Iterable<BusinessModel>? value);
   @override
   @JsonKey(ignore: true)
   _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
@@ -211,6 +239,8 @@ mixin _$BusinessModel {
   set ownerId(int value) => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   set name(String value) => throw _privateConstructorUsedError;
+  UserModel get owner => throw _privateConstructorUsedError;
+  set owner(UserModel value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -224,7 +254,9 @@ abstract class $BusinessModelCopyWith<$Res> {
           BusinessModel value, $Res Function(BusinessModel) then) =
       _$BusinessModelCopyWithImpl<$Res, BusinessModel>;
   @useResult
-  $Res call({int id, int ownerId, String name});
+  $Res call({int id, int ownerId, String name, UserModel owner});
+
+  $UserModelCopyWith<$Res> get owner;
 }
 
 /// @nodoc
@@ -243,6 +275,7 @@ class _$BusinessModelCopyWithImpl<$Res, $Val extends BusinessModel>
     Object? id = null,
     Object? ownerId = null,
     Object? name = null,
+    Object? owner = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -257,7 +290,19 @@ class _$BusinessModelCopyWithImpl<$Res, $Val extends BusinessModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      owner: null == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as UserModel,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res> get owner {
+    return $UserModelCopyWith<$Res>(_value.owner, (value) {
+      return _then(_value.copyWith(owner: value) as $Val);
+    });
   }
 }
 
@@ -269,7 +314,10 @@ abstract class _$$_BusinessModelCopyWith<$Res>
       __$$_BusinessModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int ownerId, String name});
+  $Res call({int id, int ownerId, String name, UserModel owner});
+
+  @override
+  $UserModelCopyWith<$Res> get owner;
 }
 
 /// @nodoc
@@ -286,6 +334,7 @@ class __$$_BusinessModelCopyWithImpl<$Res>
     Object? id = null,
     Object? ownerId = null,
     Object? name = null,
+    Object? owner = null,
   }) {
     return _then(_$_BusinessModel(
       id: null == id
@@ -300,6 +349,10 @@ class __$$_BusinessModelCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      owner: null == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as UserModel,
     ));
   }
 }
@@ -308,7 +361,10 @@ class __$$_BusinessModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_BusinessModel implements _BusinessModel {
   _$_BusinessModel(
-      {required this.id, required this.ownerId, required this.name});
+      {required this.id,
+      required this.ownerId,
+      required this.name,
+      required this.owner});
 
   factory _$_BusinessModel.fromJson(Map<String, dynamic> json) =>
       _$$_BusinessModelFromJson(json);
@@ -319,10 +375,12 @@ class _$_BusinessModel implements _BusinessModel {
   int ownerId;
   @override
   String name;
+  @override
+  UserModel owner;
 
   @override
   String toString() {
-    return 'BusinessModel(id: $id, ownerId: $ownerId, name: $name)';
+    return 'BusinessModel(id: $id, ownerId: $ownerId, name: $name, owner: $owner)';
   }
 
   @JsonKey(ignore: true)
@@ -343,7 +401,8 @@ abstract class _BusinessModel implements BusinessModel {
   factory _BusinessModel(
       {required int id,
       required int ownerId,
-      required String name}) = _$_BusinessModel;
+      required String name,
+      required UserModel owner}) = _$_BusinessModel;
 
   factory _BusinessModel.fromJson(Map<String, dynamic> json) =
       _$_BusinessModel.fromJson;
@@ -357,6 +416,9 @@ abstract class _BusinessModel implements BusinessModel {
   @override
   String get name;
   set name(String value);
+  @override
+  UserModel get owner;
+  set owner(UserModel value);
   @override
   @JsonKey(ignore: true)
   _$$_BusinessModelCopyWith<_$_BusinessModel> get copyWith =>

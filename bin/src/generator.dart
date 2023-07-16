@@ -289,6 +289,14 @@ extension ClassModelGenerator on MPrismaModelGenerator {
   /// Generate scalar models
   void generateClassModels() {
     final types = options.dmmf.schema.outputObjectTypes.model;
+    // final bruh = options.dmmf.schema.outputObjectTypes.model;
+    // if (bruh != null) {
+    //   for (var element in bruh) {
+    //     for (var field in element.fields) {
+    //       print('${field.name}, ${field.outputType.location.name}, ${field.outputType.namespace}');
+    //     }
+    //   }
+    // }
     if (types.isEmpty) return;
 
     final scalarModels = types.map((e) => _filterClassModelNonScalarFields(e));
@@ -362,12 +370,16 @@ extension ClassModelGenerator on MPrismaModelGenerator {
   dmmf.OutputType _filterClassModelNonScalarFields(dmmf.OutputType model) {
     return dmmf.OutputType(
       name: model.name,
-      fields: model.fields.where((e) => _isClassModelScalarField(model.name, e.name)).toList(),
+      fields: model.fields.where((e) {
+        bool isClassModelScalarField = _isClassModelScalarField(model.name, e.name, e.outputType.namespace);
+        // print('${model.name}, ${e.name}, ${e.outputType.namespace} : $isClassModelScalarField');
+        return isClassModelScalarField;
+      }).toList(),
     );
   }
 
   /// Check model scalar field
-  bool _isClassModelScalarField(String model, String field) {
+  bool _isClassModelScalarField(String model, String field, dmmf.FieldNamespace? namespace) {
     final enumName = _buildClassModelScalarFieldEnumName(model).toLowerCase();
     final enums = options.dmmf.schema.enumTypes.prisma;
     final scalarEnum = enums.firstWhere(
@@ -375,7 +387,7 @@ extension ClassModelGenerator on MPrismaModelGenerator {
       orElse: () => throw Exception('Enum $enumName not found'),
     );
 
-    return scalarEnum.values.any((e) => e.toLowerCase() == field.toLowerCase());
+    return scalarEnum.values.any((e) => e.toLowerCase() == field.toLowerCase()) || namespace == dmmf.FieldNamespace.model;
   }
 
   /// Build model scalar field enum name

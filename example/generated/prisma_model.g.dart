@@ -11,6 +11,8 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       username: json['username'] as String,
       password: json['password'] as String,
       userType: $enumDecodeNullable(_$UserTypeModelEnumMap, json['userType']),
+      businesses: (json['businesses'] as List<dynamic>?)
+          ?.map((e) => BusinessModel.fromJson(e as Map<String, dynamic>)),
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -19,6 +21,7 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'username': instance.username,
       'password': instance.password,
       'userType': _$UserTypeModelEnumMap[instance.userType],
+      'businesses': instance.businesses?.toList(),
     };
 
 const _$UserTypeModelEnumMap = {
@@ -31,6 +34,7 @@ _$_BusinessModel _$$_BusinessModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       ownerId: json['ownerId'] as int,
       name: json['name'] as String,
+      owner: UserModel.fromJson(json['owner'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_BusinessModelToJson(_$_BusinessModel instance) =>
@@ -38,4 +42,5 @@ Map<String, dynamic> _$$_BusinessModelToJson(_$_BusinessModel instance) =>
       'id': instance.id,
       'ownerId': instance.ownerId,
       'name': instance.name,
+      'owner': instance.owner,
     };
