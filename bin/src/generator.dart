@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:path/path.dart' as path;

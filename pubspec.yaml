@@ -1,6 +1,6 @@
 name: m_prisma_model_generator
 description: A new Flutter package project.
-version: 1.1.0
+version: 1.1.1
 homepage: null
 
 environment:
@@ -17,7 +17,6 @@ dependencies:
   json_annotation: ^4.8.1
   logging: ^1.2.0
   meta: ^1.9.1
-  orm: ^3.4.4
   path: ^1.8.3
   prisma_generator_helper: ^1.2.4
   recase: ^4.1.0

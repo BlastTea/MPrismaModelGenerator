@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:prisma_generator_helper/prisma_generator_helper.dart';
 
 import 'src/generator.dart';
