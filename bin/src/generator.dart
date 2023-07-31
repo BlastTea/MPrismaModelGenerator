@@ -116,7 +116,7 @@ class MPrismaModelGenerator implements Handler {
             ..name = 'json'
             ..type = code.refer('Map<String, dynamic>');
         }))
-        ..body = code.refer('_\$${classname}${withoutSuffix ? '' : 'Model'}FromJson').call([code.refer('json')]).code
+        ..body = code.refer('_\$$classname${withoutSuffix ? '' : 'Model'}FromJson').call([code.refer('json')]).code
         ..lambda = true;
     });
   }
@@ -602,7 +602,7 @@ extension OutputGenerator on MPrismaModelGenerator {
   File writeStringSync(String filename, String contents) {
     File file = File(path.joinAll([Directory.current.path, 'outputs', filename]));
     if (!file.existsSync()) {
-      file.createSync();
+      file.createSync(recursive: true);
     }
     file.writeAsStringSync(contents);
     return file;
