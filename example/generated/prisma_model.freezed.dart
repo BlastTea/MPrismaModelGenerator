@@ -14,47 +14,46 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  return _UserModel.fromJson(json);
+User _$UserFromJson(Map<String, dynamic> json) {
+  return _User.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserModel {
-  int get id => throw _privateConstructorUsedError;
-  set id(int value) => throw _privateConstructorUsedError;
+mixin _$User {
+  int? get id => throw _privateConstructorUsedError;
+  set id(int? value) => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   set username(String value) => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   set password(String value) => throw _privateConstructorUsedError;
-  UserTypeModel? get userType => throw _privateConstructorUsedError;
-  set userType(UserTypeModel? value) => throw _privateConstructorUsedError;
-  Iterable<BusinessModel>? get businesses => throw _privateConstructorUsedError;
-  set businesses(Iterable<BusinessModel>? value) =>
+  UserType? get userType => throw _privateConstructorUsedError;
+  set userType(UserType? value) => throw _privateConstructorUsedError;
+  Iterable<Business>? get businesses => throw _privateConstructorUsedError;
+  set businesses(Iterable<Business>? value) =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $UserModelCopyWith<UserModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserModelCopyWith<$Res> {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+abstract class $UserCopyWith<$Res> {
+  factory $UserCopyWith(User value, $Res Function(User) then) =
+      _$UserCopyWithImpl<$Res, User>;
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String username,
       String password,
-      UserTypeModel? userType,
-      Iterable<BusinessModel>? businesses});
+      UserType? userType,
+      Iterable<Business>? businesses});
 }
 
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
-    implements $UserModelCopyWith<$Res> {
-  _$UserModelCopyWithImpl(this._value, this._then);
+class _$UserCopyWithImpl<$Res, $Val extends User>
+    implements $UserCopyWith<$Res> {
+  _$UserCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -64,17 +63,17 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? username = null,
     Object? password = null,
     Object? userType = freezed,
     Object? businesses = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -86,52 +85,49 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
       userType: freezed == userType
           ? _value.userType
           : userType // ignore: cast_nullable_to_non_nullable
-              as UserTypeModel?,
+              as UserType?,
       businesses: freezed == businesses
           ? _value.businesses
           : businesses // ignore: cast_nullable_to_non_nullable
-              as Iterable<BusinessModel>?,
+              as Iterable<Business>?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
-  factory _$$_UserModelCopyWith(
-          _$_UserModel value, $Res Function(_$_UserModel) then) =
-      __$$_UserModelCopyWithImpl<$Res>;
+abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$$_UserCopyWith(_$_User value, $Res Function(_$_User) then) =
+      __$$_UserCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String username,
       String password,
-      UserTypeModel? userType,
-      Iterable<BusinessModel>? businesses});
+      UserType? userType,
+      Iterable<Business>? businesses});
 }
 
 /// @nodoc
-class __$$_UserModelCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$_UserModel>
-    implements _$$_UserModelCopyWith<$Res> {
-  __$$_UserModelCopyWithImpl(
-      _$_UserModel _value, $Res Function(_$_UserModel) _then)
+class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
+    implements _$$_UserCopyWith<$Res> {
+  __$$_UserCopyWithImpl(_$_User _value, $Res Function(_$_User) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? username = null,
     Object? password = null,
     Object? userType = freezed,
     Object? businesses = freezed,
   }) {
-    return _then(_$_UserModel(
-      id: null == id
+    return _then(_$_User(
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -143,72 +139,70 @@ class __$$_UserModelCopyWithImpl<$Res>
       userType: freezed == userType
           ? _value.userType
           : userType // ignore: cast_nullable_to_non_nullable
-              as UserTypeModel?,
+              as UserType?,
       businesses: freezed == businesses
           ? _value.businesses
           : businesses // ignore: cast_nullable_to_non_nullable
-              as Iterable<BusinessModel>?,
+              as Iterable<Business>?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_UserModel implements _UserModel {
-  _$_UserModel(
-      {required this.id,
+class _$_User implements _User {
+  _$_User(
+      {this.id,
       required this.username,
       required this.password,
       this.userType,
       this.businesses});
 
-  factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
-      _$$_UserModelFromJson(json);
+  factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
   @override
-  int id;
+  int? id;
   @override
   String username;
   @override
   String password;
   @override
-  UserTypeModel? userType;
+  UserType? userType;
   @override
-  Iterable<BusinessModel>? businesses;
+  Iterable<Business>? businesses;
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, password: $password, userType: $userType, businesses: $businesses)';
+    return 'User(id: $id, username: $username, password: $password, userType: $userType, businesses: $businesses)';
   }
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
-      __$$_UserModelCopyWithImpl<_$_UserModel>(this, _$identity);
+  _$$_UserCopyWith<_$_User> get copyWith =>
+      __$$_UserCopyWithImpl<_$_User>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserModelToJson(
+    return _$$_UserToJson(
       this,
     );
   }
 }
 
-abstract class _UserModel implements UserModel {
-  factory _UserModel(
-      {required int id,
+abstract class _User implements User {
+  factory _User(
+      {int? id,
       required String username,
       required String password,
-      UserTypeModel? userType,
-      Iterable<BusinessModel>? businesses}) = _$_UserModel;
+      UserType? userType,
+      Iterable<Business>? businesses}) = _$_User;
 
-  factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$_UserModel.fromJson;
+  factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
   @override
-  int get id;
-  set id(int value);
+  int? get id;
+  set id(int? value);
   @override
   String get username;
   set username(String value);
@@ -216,53 +210,54 @@ abstract class _UserModel implements UserModel {
   String get password;
   set password(String value);
   @override
-  UserTypeModel? get userType;
-  set userType(UserTypeModel? value);
+  UserType? get userType;
+  set userType(UserType? value);
   @override
-  Iterable<BusinessModel>? get businesses;
-  set businesses(Iterable<BusinessModel>? value);
+  Iterable<Business>? get businesses;
+  set businesses(Iterable<Business>? value);
   @override
   @JsonKey(ignore: true)
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;
 }
 
-BusinessModel _$BusinessModelFromJson(Map<String, dynamic> json) {
-  return _BusinessModel.fromJson(json);
+Business _$BusinessFromJson(Map<String, dynamic> json) {
+  return _Business.fromJson(json);
 }
 
 /// @nodoc
-mixin _$BusinessModel {
-  int get id => throw _privateConstructorUsedError;
-  set id(int value) => throw _privateConstructorUsedError;
-  int get ownerId => throw _privateConstructorUsedError;
-  set ownerId(int value) => throw _privateConstructorUsedError;
+mixin _$Business {
+  int? get id => throw _privateConstructorUsedError;
+  set id(int? value) => throw _privateConstructorUsedError;
+  int? get ownerId => throw _privateConstructorUsedError;
+  set ownerId(int? value) => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  set createdAt(DateTime? value) => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   set name(String value) => throw _privateConstructorUsedError;
-  UserModel get owner => throw _privateConstructorUsedError;
-  set owner(UserModel value) => throw _privateConstructorUsedError;
+  User? get owner => throw _privateConstructorUsedError;
+  set owner(User? value) => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $BusinessModelCopyWith<BusinessModel> get copyWith =>
+  $BusinessCopyWith<Business> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $BusinessModelCopyWith<$Res> {
-  factory $BusinessModelCopyWith(
-          BusinessModel value, $Res Function(BusinessModel) then) =
-      _$BusinessModelCopyWithImpl<$Res, BusinessModel>;
+abstract class $BusinessCopyWith<$Res> {
+  factory $BusinessCopyWith(Business value, $Res Function(Business) then) =
+      _$BusinessCopyWithImpl<$Res, Business>;
   @useResult
-  $Res call({int id, int ownerId, String name, UserModel owner});
+  $Res call(
+      {int? id, int? ownerId, DateTime? createdAt, String name, User? owner});
 
-  $UserModelCopyWith<$Res> get owner;
+  $UserCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
-class _$BusinessModelCopyWithImpl<$Res, $Val extends BusinessModel>
-    implements $BusinessModelCopyWith<$Res> {
-  _$BusinessModelCopyWithImpl(this._value, this._then);
+class _$BusinessCopyWithImpl<$Res, $Val extends Business>
+    implements $BusinessCopyWith<$Res> {
+  _$BusinessCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -272,155 +267,171 @@ class _$BusinessModelCopyWithImpl<$Res, $Val extends BusinessModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? ownerId = null,
+    Object? id = freezed,
+    Object? ownerId = freezed,
+    Object? createdAt = freezed,
     Object? name = null,
-    Object? owner = null,
+    Object? owner = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      ownerId: null == ownerId
+              as int?,
+      ownerId: freezed == ownerId
           ? _value.ownerId
           : ownerId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      owner: null == owner
+      owner: freezed == owner
           ? _value.owner
           : owner // ignore: cast_nullable_to_non_nullable
-              as UserModel,
+              as User?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $UserModelCopyWith<$Res> get owner {
-    return $UserModelCopyWith<$Res>(_value.owner, (value) {
+  $UserCopyWith<$Res>? get owner {
+    if (_value.owner == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.owner!, (value) {
       return _then(_value.copyWith(owner: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$_BusinessModelCopyWith<$Res>
-    implements $BusinessModelCopyWith<$Res> {
-  factory _$$_BusinessModelCopyWith(
-          _$_BusinessModel value, $Res Function(_$_BusinessModel) then) =
-      __$$_BusinessModelCopyWithImpl<$Res>;
+abstract class _$$_BusinessCopyWith<$Res> implements $BusinessCopyWith<$Res> {
+  factory _$$_BusinessCopyWith(
+          _$_Business value, $Res Function(_$_Business) then) =
+      __$$_BusinessCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int ownerId, String name, UserModel owner});
+  $Res call(
+      {int? id, int? ownerId, DateTime? createdAt, String name, User? owner});
 
   @override
-  $UserModelCopyWith<$Res> get owner;
+  $UserCopyWith<$Res>? get owner;
 }
 
 /// @nodoc
-class __$$_BusinessModelCopyWithImpl<$Res>
-    extends _$BusinessModelCopyWithImpl<$Res, _$_BusinessModel>
-    implements _$$_BusinessModelCopyWith<$Res> {
-  __$$_BusinessModelCopyWithImpl(
-      _$_BusinessModel _value, $Res Function(_$_BusinessModel) _then)
+class __$$_BusinessCopyWithImpl<$Res>
+    extends _$BusinessCopyWithImpl<$Res, _$_Business>
+    implements _$$_BusinessCopyWith<$Res> {
+  __$$_BusinessCopyWithImpl(
+      _$_Business _value, $Res Function(_$_Business) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? ownerId = null,
+    Object? id = freezed,
+    Object? ownerId = freezed,
+    Object? createdAt = freezed,
     Object? name = null,
-    Object? owner = null,
+    Object? owner = freezed,
   }) {
-    return _then(_$_BusinessModel(
-      id: null == id
+    return _then(_$_Business(
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      ownerId: null == ownerId
+              as int?,
+      ownerId: freezed == ownerId
           ? _value.ownerId
           : ownerId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      owner: null == owner
+      owner: freezed == owner
           ? _value.owner
           : owner // ignore: cast_nullable_to_non_nullable
-              as UserModel,
+              as User?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_BusinessModel implements _BusinessModel {
-  _$_BusinessModel(
-      {required this.id,
-      required this.ownerId,
-      required this.name,
-      required this.owner});
+class _$_Business implements _Business {
+  _$_Business(
+      {this.id, this.ownerId, this.createdAt, required this.name, this.owner});
 
-  factory _$_BusinessModel.fromJson(Map<String, dynamic> json) =>
-      _$$_BusinessModelFromJson(json);
+  factory _$_Business.fromJson(Map<String, dynamic> json) =>
+      _$$_BusinessFromJson(json);
 
   @override
-  int id;
+  int? id;
   @override
-  int ownerId;
+  int? ownerId;
+  @override
+  DateTime? createdAt;
   @override
   String name;
   @override
-  UserModel owner;
+  User? owner;
 
   @override
   String toString() {
-    return 'BusinessModel(id: $id, ownerId: $ownerId, name: $name, owner: $owner)';
+    return 'Business(id: $id, ownerId: $ownerId, createdAt: $createdAt, name: $name, owner: $owner)';
   }
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BusinessModelCopyWith<_$_BusinessModel> get copyWith =>
-      __$$_BusinessModelCopyWithImpl<_$_BusinessModel>(this, _$identity);
+  _$$_BusinessCopyWith<_$_Business> get copyWith =>
+      __$$_BusinessCopyWithImpl<_$_Business>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BusinessModelToJson(
+    return _$$_BusinessToJson(
       this,
     );
   }
 }
 
-abstract class _BusinessModel implements BusinessModel {
-  factory _BusinessModel(
-      {required int id,
-      required int ownerId,
+abstract class _Business implements Business {
+  factory _Business(
+      {int? id,
+      int? ownerId,
+      DateTime? createdAt,
       required String name,
-      required UserModel owner}) = _$_BusinessModel;
+      User? owner}) = _$_Business;
 
-  factory _BusinessModel.fromJson(Map<String, dynamic> json) =
-      _$_BusinessModel.fromJson;
+  factory _Business.fromJson(Map<String, dynamic> json) = _$_Business.fromJson;
 
   @override
-  int get id;
-  set id(int value);
+  int? get id;
+  set id(int? value);
   @override
-  int get ownerId;
-  set ownerId(int value);
+  int? get ownerId;
+  set ownerId(int? value);
+  @override
+  DateTime? get createdAt;
+  set createdAt(DateTime? value);
   @override
   String get name;
   set name(String value);
   @override
-  UserModel get owner;
-  set owner(UserModel value);
+  User? get owner;
+  set owner(User? value);
   @override
   @JsonKey(ignore: true)
-  _$$_BusinessModelCopyWith<_$_BusinessModel> get copyWith =>
+  _$$_BusinessCopyWith<_$_Business> get copyWith =>
       throw _privateConstructorUsedError;
 }

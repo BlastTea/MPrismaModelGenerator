@@ -6,41 +6,45 @@ part of 'prisma_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
-      id: json['id'] as int,
+_$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
+      id: json['id'] as int?,
       username: json['username'] as String,
       password: json['password'] as String,
-      userType: $enumDecodeNullable(_$UserTypeModelEnumMap, json['userType']),
+      userType: $enumDecodeNullable(_$UserTypeEnumMap, json['userType']),
       businesses: (json['businesses'] as List<dynamic>?)
-          ?.map((e) => BusinessModel.fromJson(e as Map<String, dynamic>)),
+          ?.map((e) => Business.fromJson(e as Map<String, dynamic>)),
     );
 
-Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
       'password': instance.password,
-      'userType': _$UserTypeModelEnumMap[instance.userType],
+      'userType': _$UserTypeEnumMap[instance.userType],
       'businesses': instance.businesses?.toList(),
     };
 
-const _$UserTypeModelEnumMap = {
-  UserTypeModel.developer: 'developer',
-  UserTypeModel.admin: 'admin',
+const _$UserTypeEnumMap = {
+  UserType.developer: 'developer',
+  UserType.admin: 'admin',
 };
 
-_$_BusinessModel _$$_BusinessModelFromJson(Map<String, dynamic> json) =>
-    _$_BusinessModel(
-      id: json['id'] as int,
-      ownerId: json['ownerId'] as int,
+_$_Business _$$_BusinessFromJson(Map<String, dynamic> json) => _$_Business(
+      id: json['id'] as int?,
+      ownerId: json['ownerId'] as int?,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
       name: json['name'] as String,
-      owner: UserModel.fromJson(json['owner'] as Map<String, dynamic>),
+      owner: json['owner'] == null
+          ? null
+          : User.fromJson(json['owner'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_BusinessModelToJson(_$_BusinessModel instance) =>
+Map<String, dynamic> _$$_BusinessToJson(_$_Business instance) =>
     <String, dynamic>{
       'id': instance.id,
       'ownerId': instance.ownerId,
+      'createdAt': instance.createdAt?.toIso8601String(),
       'name': instance.name,
       'owner': instance.owner,
     };

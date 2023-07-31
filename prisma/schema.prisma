@@ -7,7 +7,7 @@
 // }
 
 generator model {
-  provider = "dart run m_prisma_model_generator"
+  provider = "dart run m_prisma_model_generator --no-suffix --use-list-type"
   output   = "../example/generated"
 }
 
@@ -17,20 +17,21 @@ datasource db {
 }
 
 model User {
-  id       Int        @id @default(autoincrement())
-  username String
-  password String
-  userType UserType?  @map("user_type")
+  id         Int        @id @default(autoincrement())
+  username   String
+  password   String
+  userType   UserType?  @map("user_type")
   businesses business[]
 
   @@map("users")
 }
 
 model business {
-  id      Int    @id @default(autoincrement())
-  owner   User   @relation(fields: [ownerId], references: [id])
-  ownerId Int    @map("owner")
-  name    String @db.VarChar(255)
+  id        Int       @id @default(autoincrement())
+  owner     User?     @relation(fields: [ownerId], references: [id])
+  ownerId   Int       @map("owner")
+  createdAt DateTime? @default(now()) @map("created_at")
+  name      String    @db.VarChar(255)
 }
 
 enum UserType {

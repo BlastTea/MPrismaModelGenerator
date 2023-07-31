@@ -6,31 +6,31 @@ import 'package:json_annotation/json_annotation.dart';
 part 'prisma_model.freezed.dart';
 part 'prisma_model.g.dart';
 
-enum UserTypeModel { developer, admin }
+enum UserType { developer, admin }
 
 @_i1.unfreezed
-class UserModel with _$UserModel {
-  factory UserModel({
-    required int id,
+class User with _$User {
+  factory User({
+    int? id,
     required String username,
     required String password,
-    UserTypeModel? userType,
-    Iterable<BusinessModel>? businesses,
-  }) = _UserModel;
+    UserType? userType,
+    List<Business>? businesses,
+  }) = _User;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
 
 @_i1.unfreezed
-class BusinessModel with _$BusinessModel {
-  factory BusinessModel({
-    required int id,
-    required int ownerId,
+class Business with _$Business {
+  factory Business({
+    int? id,
+    int? ownerId,
+    DateTime? createdAt,
     required String name,
-    required UserModel owner,
-  }) = _BusinessModel;
+    User? owner,
+  }) = _Business;
 
-  factory BusinessModel.fromJson(Map<String, dynamic> json) =>
-      _$BusinessModelFromJson(json);
+  factory Business.fromJson(Map<String, dynamic> json) =>
+      _$BusinessFromJson(json);
 }

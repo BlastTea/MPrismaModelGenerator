@@ -30,17 +30,19 @@ Reference scalar(
   required FieldLocation location,
   bool isNullable = false,
   bool isList = false,
+  required bool withoutSuffix,
+  required bool useListType,
 }) {
   // Check if the type is a scalar type in the schema.
   Reference reference = scalarReferences[type.toLowerCase()] ??
       // If the type is not a scalar type, then it must be a model type.
       // Try to resolve the type as a model.
-      _resolvePrismaScalar(type, location);
+      _resolvePrismaScalar(type, location, withoutSuffix);
 
   // If the type is list, then return a list of the type.
   if (isList) {
     reference = TypeReference((TypeReferenceBuilder updates) {
-      updates.symbol = 'Iterable';
+      updates.symbol = useListType ? 'List' : 'Iterable';
       updates.types.add(reference);
     });
   }
@@ -55,7 +57,7 @@ Reference scalar(
 /// If the type is a scalar type, a reference to the Dart class that represents
 /// the Prisma scalar type is returned. Otherwise, a reference to the Dart class
 /// that represents the GraphQL type is returned.
-Reference _resolvePrismaScalar(String type, FieldLocation location) {
+Reference _resolvePrismaScalar(String type, FieldLocation location, bool withoutSuffix) {
   // 1. Check if the type is a scalar type
   if (location == FieldLocation.scalar) {
     // 2. A scalar type is a type that is defined in the GraphQL schema
@@ -63,5 +65,5 @@ Reference _resolvePrismaScalar(String type, FieldLocation location) {
   }
 
   // 3. Otherwise, return the Dart class name
-  return refer('${type.toDartClassName()}Model');
+  return refer('${type.toDartClassName()}${withoutSuffix ? '' : 'Model'}');
 }

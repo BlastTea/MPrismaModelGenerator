@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
+import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart' as code;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:path/path.dart' as path;
@@ -13,6 +16,12 @@ import 'scalars.dart';
 import 'utils.dart';
 
 class MPrismaModelGenerator implements Handler {
+  MPrismaModelGenerator({required this.withoutSuffix, required this.useListType});
+
+  final bool withoutSuffix;
+
+  final bool useListType;
+
   /// Prisma info
   late final PrismaInfo info;
 
@@ -49,6 +58,7 @@ class MPrismaModelGenerator implements Handler {
     generateEnumModels();
     generateClassModels();
     defineDirectives();
+    // generateOutputs();
 
     // 3. Write the library to the file system
     writeLibrary();
@@ -107,7 +117,7 @@ class MPrismaModelGenerator implements Handler {
             ..name = 'json'
             ..type = code.refer('Map<String, dynamic>');
         }))
-        ..body = code.refer('_\$${classname}ModelFromJson').call([code.refer('json')]).code
+        ..body = code.refer('_\$${classname}${withoutSuffix ? '' : 'Model'}FromJson').call([code.refer('json')]).code
         ..lambda = true;
     });
   }
@@ -241,7 +251,7 @@ extension EnumModelGenerator on MPrismaModelGenerator {
       library.body.add(code.Enum((code.EnumBuilder updates) {
         final values = _enumModelValuesBuilder(element.values);
         updates
-          ..name = '${element.name.toDartClassName()}Model'
+          ..name = '${element.name.toDartClassName()}${withoutSuffix ? '' : 'Model'}'
           ..values.addAll(values);
 
         if (values.any((element) => element.arguments.isNotEmpty)) {
@@ -289,37 +299,42 @@ extension ClassModelGenerator on MPrismaModelGenerator {
   /// Generate scalar models
   void generateClassModels() {
     final types = options.dmmf.schema.outputObjectTypes.model;
-    // final bruh = options.dmmf.schema.outputObjectTypes.model;
-    // if (bruh != null) {
-    //   for (var element in bruh) {
-    //     for (var field in element.fields) {
-    //       print('${field.name}, ${field.outputType.location.name}, ${field.outputType.namespace}');
-    //     }
-    //   }
-    // }
+    final inputTypes = options.dmmf.schema.inputObjectTypes.prisma
+        .where((element) => element.name.endsWith('CreateInput') && !element.name.endsWith('UncheckedCreateInput'))
+        .map(
+          (e) => dmmf.InputType(
+            name: e.name.replaceAll('CreateInput', ''),
+            constraints: e.constraints,
+            fields: e.fields,
+            fieldsMap: e.fieldsMap,
+            meta: e.meta,
+          ),
+        )
+        .toList();
+
     if (types.isEmpty) return;
 
     final scalarModels = types.map((e) => _filterClassModelNonScalarFields(e));
 
-    library.body.addAll(scalarModels.map((e) => _buildClassModel(e)));
+    library.body.addAll(scalarModels.map((e) => _buildClassModel(e, inputTypes.trySingleWhere((element) => element.name.toLowerCase() == e.name.toLowerCase()))));
   }
 
   /// Build scalar model
-  code.Class _buildClassModel(dmmf.OutputType model) {
+  code.Class _buildClassModel(dmmf.OutputType model, dmmf.InputType? inputType) {
     final classname = model.name.toDartClassName();
     return code.Class((updates) {
       updates
-        ..name = '${classname}Model'
-        ..mixins.add(code.refer('_\$${classname}Model'))
+        ..name = '$classname${withoutSuffix ? '' : 'Model'}'
+        ..mixins.add(code.refer('_\$$classname${withoutSuffix ? '' : 'Model'}'))
         ..annotations.add(code.refer('unfreezed', packages.freezedAnnotation));
       // ..methods.add(_buildToJsonMethod(classname));
 
       // Build class fields
-      final fields = model.fields.map((e) => _buildFieldModel(e));
+      final fields = model.fields.map((e) => _buildFieldModel(e, inputType?.fields.trySingleWhere((element) => element.name == e.name)));
       // updates.fields.addAll(fields);
 
       // Build default constructor
-      updates.constructors.add(_buildDefaultConstructor(fields, '${classname}Model'));
+      updates.constructors.add(_buildDefaultConstructor(fields, '$classname${withoutSuffix ? '' : 'Model'}'));
 
       // Build from json constructor
       updates.constructors.add(_buildFromJsonConstructor(classname));
@@ -327,7 +342,10 @@ extension ClassModelGenerator on MPrismaModelGenerator {
   }
 
   /// Build field
-  code.Field _buildFieldModel(dmmf.SchemaField field) {
+  code.Field _buildFieldModel(
+    dmmf.SchemaField field,
+    dmmf.SchemaArg? inputField,
+  ) {
     return code.Field((code.FieldBuilder updates) {
       final typeName = field.outputType.type.when<String>(
         string: (value) => value,
@@ -337,8 +355,10 @@ extension ClassModelGenerator on MPrismaModelGenerator {
       final type = scalar(
         typeName,
         isList: field.outputType.isList,
-        isNullable: field.isNullable == true,
+        isNullable: (inputField?.isNullable ?? true) || field.isNullable == true,
         location: field.outputType.location,
+        withoutSuffix: withoutSuffix,
+        useListType: useListType,
       );
 
       updates
@@ -372,7 +392,6 @@ extension ClassModelGenerator on MPrismaModelGenerator {
       name: model.name,
       fields: model.fields.where((e) {
         bool isClassModelScalarField = _isClassModelScalarField(model.name, e.name, e.outputType.namespace);
-        // print('${model.name}, ${e.name}, ${e.outputType.namespace} : $isClassModelScalarField');
         return isClassModelScalarField;
       }).toList(),
     );
@@ -392,4 +411,249 @@ extension ClassModelGenerator on MPrismaModelGenerator {
 
   /// Build model scalar field enum name
   String _buildClassModelScalarFieldEnumName(String model) => '${model}ScalarFieldEnum';
+}
+
+extension OutputGenerator on MPrismaModelGenerator {
+  void generateOutputs() {
+    final enumTypeModels = options.dmmf.schema.enumTypes.model;
+    final enumTypePrismas = options.dmmf.schema.enumTypes.prisma;
+    final fieldRefTypePrismas = options.dmmf.schema.fieldRefTypes.prisma;
+    final inputObjectTypeModels = options.dmmf.schema.inputObjectTypes.model;
+    final inputObjectTypePrisma = options.dmmf.schema.inputObjectTypes.prisma;
+    final outputObjectTypeModels = options.dmmf.schema.outputObjectTypes.model;
+    final outputObjectTypePrismas = options.dmmf.schema.outputObjectTypes.prisma;
+    final rootMutationType = options.dmmf.schema.rootMutationType;
+    final rootQueryType = options.dmmf.schema.rootQueryType;
+
+    String content = '';
+
+    print('---Enum Types Model---');
+    if (enumTypeModels != null) {
+      for (var enumTypeModel in enumTypeModels) {
+        content += '${enumTypeModel.name}, ${enumTypeModel.values}';
+      }
+      writeStringSync('enum_types_model.json', content);
+    }
+    print('---End---');
+
+    print('---Enum Types Prisma---');
+    content = '';
+    for (var enumTypePrisma in enumTypePrismas) {
+      content += '${enumTypePrisma.name}, ${enumTypePrisma.values}';
+    }
+    writeStringSync('enum_types_prisma.json', content);
+    print('---End---');
+
+    print('---Field Ref Types Prisma---');
+    if (fieldRefTypePrismas != null) {
+      content = '';
+      for (var fieldRefTypePrisma in fieldRefTypePrismas) {
+        content += '{"${fieldRefTypePrisma.name}": ${fieldRefTypePrisma.fields.map(
+              (e) => {
+                '"${e.name}"': {
+                  '"isNullable"': e.isNullable,
+                  '"isRequired"': e.isRequired,
+                  '"inputTypes"': e.inputTypes
+                      .map(
+                        (e) => {
+                          '"isList"': e.isList,
+                          '"location"': {
+                            '"index"': e.location.index,
+                            '"name"': '"${e.location.name}"',
+                          },
+                        },
+                      )
+                      .toList(),
+                  '"comment"': e.comment,
+                }
+              },
+            ).toList()}},';
+      }
+      writeStringSync('field_ref_types_prisma.json', content);
+    }
+    print('---End---');
+
+    print('---Input Object Types Model');
+    if (inputObjectTypeModels != null) {
+      content = '';
+      for (var inputObjectTypeModel in inputObjectTypeModels) {
+        content += '{"${inputObjectTypeModel.name}": ${inputObjectTypeModel.fields.map(
+              (e) => {
+                '"${e.name}"': {
+                  '"isNullable"': e.isNullable,
+                  '"isRequired"': e.isRequired,
+                  '"inputTypes"': e.inputTypes
+                      .map(
+                        (e) => {
+                          '"isList"': e.isList,
+                          '"location"': {
+                            '"index"': e.location.index,
+                            '"name"': '"${e.location.name}"',
+                          },
+                        },
+                      )
+                      .toList(),
+                  '"comment"': e.comment,
+                }
+              },
+            ).toList()}},';
+      }
+      writeStringSync('input_object_types_model.json', content);
+    }
+    print('---End---');
+
+    print('---Input Object Types Prisma');
+    content = '';
+    for (var inputObjectTypePrisma in inputObjectTypePrisma) {
+      content += '{"${inputObjectTypePrisma.name}": ${inputObjectTypePrisma.fields.map(
+            (e) => {
+              '"${e.name}"': {
+                '"isNullable"': e.isNullable,
+                '"isRequired"': e.isRequired,
+                '"inputTypes"': e.inputTypes
+                    .map(
+                      (e) => {
+                        '"isList"': e.isList,
+                        '"location"': {
+                          '"index"': e.location.index,
+                          '"name"': '"${e.location.name}"',
+                        },
+                      },
+                    )
+                    .toList(),
+                '"comment"': e.comment,
+              }
+            },
+          ).toList()}},';
+    }
+    writeStringSync('input_object_types_prisma.json', content);
+    print('---End---');
+
+    print('---Output Object Types Model---');
+    content = '';
+    for (var outputObjectTypeModel in outputObjectTypeModels) {
+      content += '{"${outputObjectTypeModel.name}": ${outputObjectTypeModel.fields.map(
+            (e) => {
+              '"${e.name}"': {
+                '"isNullable"': e.isNullable,
+                '"args"': e.args
+                    .map(
+                      (e) => {
+                        '"isNullable"': e.isNullable,
+                        '"isRequired"': e.isRequired,
+                        '"inputTypes"': e.inputTypes
+                            .map(
+                              (e) => {
+                                '"isList"': e.isList,
+                                '"location"': {
+                                  '"index"': e.location.index,
+                                  '"name"': '"${e.location.name}"',
+                                },
+                              },
+                            )
+                            .toList(),
+                        '"comment"': e.comment,
+                      },
+                    )
+                    .toList()
+              }
+            },
+          ).toList()}},';
+    }
+    writeStringSync('output_obect_types_model.json', content);
+    print('---End---');
+
+    print('---Output Object Types Prisma---');
+    content = '';
+    for (var outputObjectTypePrisma in outputObjectTypePrismas) {
+      content += '{"${outputObjectTypePrisma.name}": ${outputObjectTypePrisma.fields.map(
+            (e) => {
+              '"${e.name}"': {
+                '"isNullable"': e.isNullable,
+                '"args"': e.args.map(
+                  (e) => {
+                    '"isNullable"': e.isNullable,
+                    '"isRequired"': e.isRequired,
+                    '"inputTypes"': e.inputTypes
+                        .map(
+                          (e) => {
+                            '"isList"': e.isList,
+                            '"location"': {
+                              '"index"': e.location.index,
+                              '"name"': '"${e.location.name}"',
+                            },
+                          },
+                        )
+                        .toList(),
+                    '"comment"': e.comment,
+                  },
+                )
+              }
+            },
+          ).toList()}},';
+    }
+    writeStringSync('output_object_types_prisma.json', content);
+    print('---End---');
+
+    print('Root Mutation Type : $rootMutationType');
+
+    print('Root Query Type : $rootQueryType');
+  }
+
+  File writeStringSync(String filename, String contents) {
+    File file = File(path.joinAll([Directory.current.path, 'outputs', filename]));
+    if (!file.existsSync()) {
+      file.createSync();
+    }
+    file.writeAsStringSync(contents);
+    return file;
+  }
+}
+
+/// An extension on `Iterable<E>` providing utility methods to work with collections.
+extension IterableExtension<E> on Iterable<E> {
+  /// Returns a new list containing all elements of this iterable, sorted according to the [compare] function.
+  ///
+  /// The [compare] function is optional and defines the sorting order of the elements.
+  /// If the [compare] function is omitted, the elements are sorted in their natural order.
+  /// If the [compare] function returns a negative value, the first element is ordered before the second element.
+  /// If the [compare] function returns zero, the order of the elements remains unchanged.
+  /// If the [compare] function returns a positive value, the second element is ordered before the first element.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// List<int> numbers = [5, 2, 10, 7];
+  /// List<int> sortedNumbers = numbers.sorted((a, b) => a.compareTo(b));
+  /// print(sortedNumbers); // Output: [2, 5, 7, 10]
+  /// ```
+  List<E> sorted([int Function(E, E)? compare]) {
+    List<E> list = toList();
+    list.sort(compare);
+    return list;
+  }
+
+  /// Returns the single element that satisfies the given [test] or `null` if none or more than one element matches.
+  ///
+  /// The [test] function is used to test elements for a condition. It should return `true` for the desired element.
+  /// If there is exactly one element in the iterable that satisfies the [test], that element is returned.
+  /// If there are no elements that satisfy the [test], or if there is more than one matching element,
+  /// the [orElse] function, if provided, is executed and its result is returned.
+  /// If [orElse] is not provided, or if it returns `null`, the method returns `null`.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// List<int> numbers = [1, 3, 5, 7];
+  /// int? singleEven = numbers.trySingleWhere((element) => element.isEven);
+  /// print(singleEven); // Output: null (no even numbers in the list)
+  ///
+  /// int? result = numbers.trySingleWhere((element) => element.isOdd, orElse: () => 0);
+  /// print(result); // Output: 1 (the only odd number in the list)
+  /// ```
+  E? trySingleWhere(bool Function(E element) test, {E Function()? orElse}) {
+    try {
+      return singleWhere(test, orElse: orElse);
+    } on StateError {
+      return null;
+    }
+  }
 }
